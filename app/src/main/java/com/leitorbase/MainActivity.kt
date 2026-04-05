@@ -8,25 +8,30 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        val input = findViewById<EditText>(R.id.inputTexto)
-        val botao = findViewById<Button>(R.id.botaoExecutar)
-        val resultado = findViewById<TextView>(R.id.resultadoTexto)
+        try {
+            setContentView(R.layout.activity_main)
 
-        botao.setOnClickListener {
+            val input = findViewById<EditText>(R.id.inputTexto)
+            val botao = findViewById<Button>(R.id.botaoExecutar)
+            val resultado = findViewById<TextView>(R.id.resultadoTexto)
 
-            val texto = input.text.toString().lowercase()
+            botao.setOnClickListener {
 
-            val resposta = when {
-                texto.contains("olá") -> "Olá! Tudo bem com você?"
-                texto.contains("seu nome") -> "Eu sou seu assistente."
-                texto.contains("jesus") -> "Jesus é descrito como glorioso em Apocalipse 1:13-18."
-                texto.isEmpty() -> "Digite algo primeiro."
-                else -> "Você disse: $texto"
+                val texto = input.text.toString().lowercase()
+
+                val resposta = when {
+                    texto.contains("olá") -> "Olá! Tudo bem com você?"
+                    texto.contains("jesus") -> "Jesus é descrito como glorioso em Apocalipse 1:13-18."
+                    texto.isEmpty() -> "Digite algo primeiro."
+                    else -> "Você disse: $texto"
+                }
+
+                resultado.text = resposta
             }
 
-            resultado.text = resposta
+        } catch (e: Exception) {
+            Toast.makeText(this, "Erro: " + e.message, Toast.LENGTH_LONG).show()
         }
     }
 }
