@@ -1,37 +1,52 @@
 package com.leitorbase
 
 import android.os.Bundle
-import android.widget.*
+import android.speech.tts.TextToSpeech
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
+
+    private lateinit var tts: TextToSpeech
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-        try {
-            setContentView(R.layout.activity_main)
+        val inputText = findViewById<EditText>(R.id.inputText)
+        val outputText = findViewById<TextView>(R.id.outputText)
+        val button = findViewById<Button>(R.id.button)
 
-            val input = findViewById<EditText>(R.id.inputTexto)
-            val botao = findViewById<Button>(R.id.botaoExecutar)
-            val resultado = findViewById<TextView>(R.id.resultadoTexto)
+        tts = TextToSpeech(this, this)
 
-            botao.setOnClickListener {
+        button.setOnClickListener {
+            val text = inputText.text.toString()
 
-                val texto = input.text.toString().lowercase()
+            val resposta = "Você digitou: $text"
+            outputText.text = resposta
 
-                val resposta = when {
-                    texto.contains("olá") -> "Olá! Tudo bem com você?"
-                    texto.contains("jesus") -> "Jesus é descrito como glorioso em Apocalipse 1:13-18."
-                    texto.isEmpty() -> "Digite algo primeiro."
-                    else -> "Você disse: $texto"
-                }
-
-                resultado.text = resposta
-            }
-
-        } catch (e: Exception) {
-            Toast.makeText(this, "Erro: " + e.message, Toast.LENGTH_LONG).show()
+            falar(resposta)
         }
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            tts.language = Locale("pt", "BR")
+        }
+    }
+
+    private fun falar(texto: String) {
+        tts.speak(texto, TextToSpeech.QUEUE_FLUSH, null, null)
+    }
+
+    override fun onDestroy() {
+        if (::tts.isInitialized) {
+            tts.stop()
+            tts.shutdown()
+        }
+        super.onDestroy()
     }
 }
