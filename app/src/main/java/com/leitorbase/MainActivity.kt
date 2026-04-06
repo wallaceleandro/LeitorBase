@@ -23,14 +23,27 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         tts = TextToSpeech(this, this)
 
         button.setOnClickListener {
-    val text = inputText.text.toString()
+            val text = inputText.text.toString()
 
-    val resposta = processarTexto(text)
+            val resposta = processarTexto(text)
 
-    outputText.text = resposta
-    falar(resposta)
-}
+            outputText.text = resposta
+            falar(resposta)
         }
+    }
+
+    private fun processarTexto(texto: String): String {
+        return when {
+            texto.contains("oi", true) -> "Olá! Tudo bem?"
+            texto.contains("seu nome", true) -> "Eu sou o Leitor Universal IA"
+            texto.contains("hora", true) -> "Ainda não sei ver horas 😅"
+            texto.isBlank() -> "Digite algo primeiro"
+            else -> "Você disse: $texto"
+        }
+    }
+
+    private fun falar(texto: String) {
+        tts.speak(texto, TextToSpeech.QUEUE_FLUSH, null, null)
     }
 
     override fun onInit(status: Int) {
@@ -38,20 +51,6 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             tts.language = Locale("pt", "BR")
         }
     }
-
-    private fun falar(texto: String) {
-        tts.speak(texto, TextToSpeech.QUEUE_FLUSH, null, null)
-
-private fun processarTexto(texto: String): String {
-    return when {
-        texto.contains("oi", true) -> "Olá! Tudo bem?"
-        texto.contains("seu nome", true) -> "Eu sou o Leitor Universal IA"
-        texto.contains("hora", true) -> "Ainda não sei ver horas 😅"
-        texto.isBlank() -> "Digite algo primeiro"
-        else -> "Você disse: $texto"
-    }
-}
-   }
 
     override fun onDestroy() {
         if (::tts.isInitialized) {
