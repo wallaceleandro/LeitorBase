@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         button.setOnClickListener {
             val text = inputText.text.toString()
 
-            val resposta = processarTexto(text)
+            val resposta = IA.processar(text)
 
             outputText.text = resposta
             falar(resposta)
