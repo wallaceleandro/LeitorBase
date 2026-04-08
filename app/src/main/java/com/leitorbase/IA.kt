@@ -1,22 +1,22 @@
 package com.leitorbase
 
+import android.content.Context
+
 object IA {
 
-    // 🔹 Memória simples
-    var ultimaPergunta: String? = null
-    var ultimoAssunto: String? = null
-
-    fun processar(text: String): String {
+    fun processar(context: Context, text: String): String {
 
         val pergunta = text.lowercase()
 
-        // 🔹 Regras básicas + contexto
+        val ultimaPergunta = Memoria.lerPergunta(context)
+        val ultimoAssunto = Memoria.lerAssunto(context)
+
         val resposta = when {
 
             pergunta.contains("oi") -> "Olá!"
 
             pergunta.contains("jesus") -> {
-                ultimoAssunto = "jesus"
+                Memoria.salvarAssunto(context, "jesus")
                 "Jesus é uma figura central do cristianismo"
             }
 
@@ -31,8 +31,7 @@ object IA {
             else -> "Não sei responder ainda"
         }
 
-        // 🔹 Salva última pergunta
-        ultimaPergunta = text
+        Memoria.salvarPergunta(context, text)
 
         return resposta
     }
