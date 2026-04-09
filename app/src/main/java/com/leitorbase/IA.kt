@@ -6,25 +6,25 @@ object IA {
 
     fun processar(context: Context, pergunta: String): String {
 
-        // 🔹 Salva a pergunta
-        Memoria.salvar(context, pergunta)
+        try {
 
-        // 🔹 Recupera última memória
-        val textoAnterior = Memoria.ler(context)
+            Memoria.salvar(context, pergunta)
 
-        // 🔹 Processamento simples
-        return when {
-            pergunta.contains("resumo", ignoreCase = true) ->
-                "Resumo do texto: $textoAnterior"
+            val textoAnterior = Memoria.ler(context)
 
-            pergunta.contains("explicar", ignoreCase = true) ->
-                "Explicação: $textoAnterior"
+            return when {
+                pergunta.contains("resumo", true) ->
+                    "Resumo do texto: $textoAnterior"
 
-            pergunta.contains("jesus", ignoreCase = true) ->
-                "Jesus é o Filho de Deus e realiza milagres conforme a fé."
+                pergunta.contains("explicar", true) ->
+                    "Explicação: $textoAnterior"
 
-            else ->
-                "Resposta padrão: $pergunta"
+                else ->
+                    "Resposta: $pergunta"
+            }
+
+        } catch (e: Exception) {
+            return "Erro interno na IA"
         }
     }
 }

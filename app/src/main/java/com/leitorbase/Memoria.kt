@@ -4,13 +4,13 @@ import android.content.Context
 
 object Memoria {
 
-    fun salvar(context: Context, pergunta: String) {
+    fun salvar(context: Context, texto: String) {
         val prefs = context.getSharedPreferences("memoria", Context.MODE_PRIVATE)
-        prefs.edit().putString("ultima_pergunta", pergunta).apply()
+        prefs.edit().putString("ultima", texto).apply()
     }
 
     fun ler(context: Context): String {
         val prefs = context.getSharedPreferences("memoria", Context.MODE_PRIVATE)
-        return prefs.getString("ultima_pergunta", "") ?: ""
+        return prefs.getString("ultima", "") ?: ""
     }
 }

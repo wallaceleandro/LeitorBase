@@ -32,17 +32,19 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         // 🧠 BOTÃO IA
         buttonPerguntar.setOnClickListener {
-            val text = inputText.text.toString()
 
-            val resposta = if (Internet.temInternet(this)) {
-    ApiIA.responder(this, text)
-} else {
-    IA.processar(this, text)
+    val text = inputText.text.toString()
+
+    if (text.isEmpty()) {
+        outputText.text = "Digite algo primeiro"
+        return@setOnClickListener
+    }
+
+    val resposta = IA.processar(this, text)
+
+    outputText.text = resposta
+    falar(resposta)
 }
-
-            outputText.text = resposta
-            falar(resposta)
-        }
     }
 
     // 🔊 Inicialização da voz
