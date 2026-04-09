@@ -23,6 +23,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"/>
 
+<Button
+    android:id="@+id/buttonAbrirPdf"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Abrir PDF"/>
+
 <TextView
     android:id="@+id/outputText"
     android:layout_width="match_parent"

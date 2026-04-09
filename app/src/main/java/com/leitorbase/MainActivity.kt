@@ -21,6 +21,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         val buttonLer = findViewById<Button>(R.id.buttonLer)
         val buttonPerguntar = findViewById<Button>(R.id.buttonPerguntar)
+        val resultado = PdfManager.pdfSelecionado(this, uri)
+outputText.text = resultado
 
         tts = TextToSpeech(this, this)
 
