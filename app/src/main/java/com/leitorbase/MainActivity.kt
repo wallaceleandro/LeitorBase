@@ -6,7 +6,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import java.util.*
+import java.util.Locale
 
 class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
@@ -18,13 +18,20 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         val inputText = findViewById<EditText>(R.id.inputText)
         val outputText = findViewById<TextView>(R.id.outputText)
-        val button = findViewById<Button>(R.id.button)
+
         val buttonLer = findViewById<Button>(R.id.buttonLer)
-val buttonPerguntar = findViewById<Button>(R.id.buttonPerguntar)
+        val buttonPerguntar = findViewById<Button>(R.id.buttonPerguntar)
 
         tts = TextToSpeech(this, this)
 
-        button.setOnClickListener {
+        // 🔊 BOTÃO LEITOR
+        buttonLer.setOnClickListener {
+            val texto = inputText.text.toString()
+            falar(texto)
+        }
+
+        // 🧠 BOTÃO IA
+        buttonPerguntar.setOnClickListener {
             val text = inputText.text.toString()
 
             val resposta = IA.processar(this, text)
@@ -34,36 +41,22 @@ val buttonPerguntar = findViewById<Button>(R.id.buttonPerguntar)
         }
     }
 
-            buttonLer.setOnClickListener {
-    val texto = inputText.text.toString()
-    falar(texto)
-}
-
-    private fun processarTexto(texto: String): String {
-        return when {
-            texto.contains("oi", true) -> "Olá! Tudo bem?"
-            texto.contains("seu nome", true) -> "Eu sou o Leitor Universal IA"
-            texto.contains("hora", true) -> "Ainda não sei ver horas 😅"
-            texto.isBlank() -> "Digite algo primeiro"
-            else -> "Você disse: $texto"
-        }
-    }
-
-    private fun falar(texto: String) {
-        tts.speak(texto, TextToSpeech.QUEUE_FLUSH, null, null)
-    }
-
+    // 🔊 Inicialização da voz
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
             tts.language = Locale("pt", "BR")
         }
     }
 
+    // 🔊 Função de fala
+    private fun falar(texto: String) {
+        tts.speak(texto, TextToSpeech.QUEUE_FLUSH, null, null)
+    }
+
+    // 🔊 Liberar memória
     override fun onDestroy() {
-        if (::tts.isInitialized) {
-            tts.stop()
-            tts.shutdown()
-        }
         super.onDestroy()
+        tts.stop()
+        tts.shutdown()
     }
 }

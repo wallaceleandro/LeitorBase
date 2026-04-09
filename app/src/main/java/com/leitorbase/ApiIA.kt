@@ -1,12 +1,8 @@
+package com.leitorbase
+
 object ApiIA {
 
     fun responder(pergunta: String): String {
-        return "Resposta da API aqui"
+        return "Resposta online (simulada): $pergunta"
     }
-}
-
-val resposta = if (temInternet()) {
-    ApiIA.responder(text)
-} else {
-    IA.processar(this, text)
 }
