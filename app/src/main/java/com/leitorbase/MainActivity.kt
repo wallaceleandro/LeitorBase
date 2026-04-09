@@ -34,7 +34,11 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         buttonPerguntar.setOnClickListener {
             val text = inputText.text.toString()
 
-            val resposta = IA.processar(this, text)
+            val resposta = if (Internet.temInternet(this)) {
+    ApiIA.responder(this, text)
+} else {
+    IA.processar(this, text)
+}
 
             outputText.text = resposta
             falar(resposta)
