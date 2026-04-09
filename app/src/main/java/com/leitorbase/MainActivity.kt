@@ -1,5 +1,6 @@
 package com.leitorbase
 
+import android.content.Intent
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.widget.Button
@@ -15,12 +16,24 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+    buttonAbrirPdf.setOnClickListener {
+
+    val intent = Intent(Intent.ACTION_GET_CONTENT)
+    intent.type = "application/pdf"
+    intent.addCategory(Intent.CATEGORY_OPENABLE)
+
+    startActivityForResult(
+        Intent.createChooser(intent, "Selecionar PDF"),
+        100
+    )
+}
 
         val inputText = findViewById<EditText>(R.id.inputText)
         val outputText = findViewById<TextView>(R.id.outputText)
 
         val buttonLer = findViewById<Button>(R.id.buttonLer)
         val buttonPerguntar = findViewById<Button>(R.id.buttonPerguntar)
+        val buttonAbrirPdf = findViewById<Button>(R.id.buttonAbrirPdf)
 
         tts = TextToSpeech(this, this)
 
@@ -64,5 +77,18 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         super.onDestroy()
         tts.stop()
         tts.shutdown()
+    }
+}
+override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
+
+    if (requestCode == 100 && resultCode == RESULT_OK) {
+
+        val uri = data?.data
+
+        val resultado = PdfManager.pdfSelecionado(this, uri)
+        val outputText = findViewById<TextView>(R.id.outputText)
+
+        outputText.text = resultado
     }
 }
