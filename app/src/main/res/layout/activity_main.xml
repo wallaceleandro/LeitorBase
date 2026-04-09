@@ -30,8 +30,18 @@
     android:text="Abrir PDF"/>
 
 <TextView
-    android:id="@+id/outputText"
+    <ScrollView
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"/>
+    android:layout_height="0dp"
+    android:layout_weight="1">
+
+    <TextView
+        android:id="@+id/outputText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Resultado aparecerá aqui"
+        android:textSize="16sp"/>
+
+</ScrollView>
 
 </LinearLayout>

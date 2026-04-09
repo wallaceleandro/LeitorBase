@@ -69,7 +69,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             val resultado = PdfManager.pdfSelecionado(this, uri)
 
             val outputText = findViewById<TextView>(R.id.outputText)
-            outputText.text = resultado
+
+outputText.text = resultado
 falar(resultado)
 
         }
