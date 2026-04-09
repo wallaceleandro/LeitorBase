@@ -4,36 +4,27 @@ import android.content.Context
 
 object IA {
 
-    fun processar(context: Context, text: String): String {
+    fun processar(context: Context, pergunta: String): String {
 
-        val pergunta = text.lowercase()
-
-        val ultimaPergunta = Memoria.lerPergunta(context)
-        val ultimoAssunto = Memoria.lerAssunto(context)
-        val ultima = Memoria.ler(context)
-
-        val resposta = when {
-
-            pergunta.contains("oi") -> "Olá!"
-
-            pergunta.contains("jesus") -> {
-                Memoria.salvarAssunto(context, "jesus")
-                "Jesus é uma figura central do cristianismo"
-            }
-
-            pergunta.contains("milagre") && ultimoAssunto == "jesus" -> {
-                "Sim, Jesus realizou milagres segundo a Bíblia"
-            }
-
-            pergunta.contains("ultima") -> {
-                "Você perguntou: $ultimaPergunta"
-            }
-
-            else -> "Não sei responder ainda"
-        }
-
+        // 🔹 Salva a pergunta
         Memoria.salvar(context, pergunta)
 
-        return resposta
+        // 🔹 Recupera última memória
+        val textoAnterior = Memoria.ler(context)
+
+        // 🔹 Processamento simples
+        return when {
+            pergunta.contains("resumo", ignoreCase = true) ->
+                "Resumo do texto: $textoAnterior"
+
+            pergunta.contains("explicar", ignoreCase = true) ->
+                "Explicação: $textoAnterior"
+
+            pergunta.contains("jesus", ignoreCase = true) ->
+                "Jesus é o Filho de Deus e realiza milagres conforme a fé."
+
+            else ->
+                "Resposta padrão: $pergunta"
+        }
     }
 }
