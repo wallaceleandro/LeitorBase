@@ -70,6 +70,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             val outputText = findViewById<TextView>(R.id.outputText)
             outputText.text = resultado
+falar(resultado)
+
         }
     }
 
