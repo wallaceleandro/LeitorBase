@@ -10,6 +10,7 @@ object IA {
 
         val ultimaPergunta = Memoria.lerPergunta(context)
         val ultimoAssunto = Memoria.lerAssunto(context)
+        val ultima = Memoria.ler(context)
 
         val resposta = when {
 
@@ -31,7 +32,7 @@ object IA {
             else -> "Não sei responder ainda"
         }
 
-        Memoria.salvarPergunta(context, text)
+        Memoria.salvar(context, pergunta)
 
         return resposta
     }

@@ -5,6 +5,6 @@ import android.content.Context
 object ApiIA {
 
     fun responder(context: Context, pergunta: String): String {
-        return "Resposta online simulada: $pergunta"
+        return "IA online ainda não conectada. Pergunta: $pergunta"
     }
 }
