@@ -19,6 +19,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         val inputText = findViewById<EditText>(R.id.inputText)
         val outputText = findViewById<TextView>(R.id.outputText)
         val button = findViewById<Button>(R.id.button)
+        val buttonLer = findViewById<Button>(R.id.buttonLer)
+val buttonPerguntar = findViewById<Button>(R.id.buttonPerguntar)
 
         tts = TextToSpeech(this, this)
 
@@ -31,6 +33,11 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             falar(resposta)
         }
     }
+
+            buttonLer.setOnClickListener {
+    val texto = inputText.text.toString()
+    falar(texto)
+}
 
     private fun processarTexto(texto: String): String {
         return when {

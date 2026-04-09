@@ -6,22 +6,26 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/inputText"
-        android:hint="Digite algo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    android:id="@+id/inputText"
+    android:hint="Digite ou cole um texto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
 
-    <Button
-        android:id="@+id/button"
-        android:text="Falar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+<Button
+    android:id="@+id/buttonLer"
+    android:text="Ler texto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
 
-    <TextView
-        android:id="@+id/outputText"
-        android:text="Resultado aparecerá aqui"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="20dp"/>
+<Button
+    android:id="@+id/buttonPerguntar"
+    android:text="Perguntar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
+
+<TextView
+    android:id="@+id/outputText"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
 
 </LinearLayout>
