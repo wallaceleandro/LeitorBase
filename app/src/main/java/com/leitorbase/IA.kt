@@ -6,25 +6,21 @@ object IA {
 
     fun processar(context: Context, pergunta: String): String {
 
-        try {
+    val textoPdf = PdfManager.textoPdf
 
-            Memoria.salvar(context, pergunta)
+    if (textoPdf.isNotEmpty()) {
 
-            val textoAnterior = Memoria.ler(context)
+        return when {
+            pergunta.contains("resumo", true) ->
+                textoPdf.take(300)
 
-            return when {
-                pergunta.contains("resumo", true) ->
-                    "Resumo do texto: $textoAnterior"
+            pergunta.contains("explicar", true) ->
+                "Explicação baseada no PDF: " + textoPdf.take(200)
 
-                pergunta.contains("explicar", true) ->
-                    "Explicação: $textoAnterior"
-
-                else ->
-                    "Resposta: $pergunta"
-            }
-
-        } catch (e: Exception) {
-            return "Erro interno na IA"
+            else ->
+                "Baseado no PDF: " + textoPdf.take(150)
         }
     }
+
+    return "Nenhum PDF carregado"
 }

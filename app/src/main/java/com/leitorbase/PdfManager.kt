@@ -8,6 +8,8 @@ import com.itextpdf.text.pdf.parser.PdfTextExtractor
 
 object PdfManager {
 
+var textoPdf: String = ""
+
     fun pdfSelecionado(context: Context, uri: Uri?): String {
 
         if (uri == null) return "Erro ao abrir PDF"
@@ -26,7 +28,8 @@ object PdfManager {
 
             reader.close()
 
-            val resultado = stringBuilder.toString()
+            textoPdf = stringBuilder.toString()
+val resultado = textoPdf
 
             if (resultado.isBlank()) {
                 "PDF sem texto ou não suportado"
