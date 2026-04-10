@@ -1,47 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="20dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <EditText
-    android:id="@+id/inputText"
-    android:hint="Digite ou cole um texto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"/>
-
-<Button
-    android:id="@+id/buttonLer"
-    android:text="Ler texto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"/>
-
-<Button
-    android:id="@+id/buttonPerguntar"
-    android:text="Perguntar"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"/>
-
-<Button
-    android:id="@+id/buttonAbrirPdf"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="Abrir PDF"/>
-
-<TextView
-    <ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="1">
-
-    <TextView
-        android:id="@+id/outputText"
+        android:id="@+id/inputText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Resultado aparecerá aqui"
-        android:textSize="16sp" />
+        android:hint="Digite algo" />
 
-</ScrollView>
+    <Button
+        android:id="@+id/buttonLer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ler Texto" />
+
+    <Button
+        android:id="@+id/buttonPerguntar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Perguntar IA" />
+
+    <Button
+        android:id="@+id/buttonAbrirPdf"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Abrir PDF" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/outputText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Resultado aparecerá aqui"
+            android:textSize="16sp" />
+
+    </ScrollView>
 
 </LinearLayout>
