@@ -8,20 +8,27 @@ object IA {
 
         val textoPdf = PdfManager.textoPdf
 
+        // 🔹 RESPOSTAS BÁSICAS (PRIORIDADE)
+        if (pergunta.contains("jesus", true)) {
+            return "Jesus é o Filho de Deus, central no cristianismo."
+        }
+
+        if (pergunta.contains("milagre", true)) {
+            return "Milagre é um evento sobrenatural interpretado como ação divina."
+        }
+
+        // 🔹 PDF (SÓ SE PEDIR)
         if (textoPdf.isNotEmpty()) {
 
-            return when {
-                pergunta.contains("resumo", true) ->
-                    textoPdf.take(300)
+            if (pergunta.contains("resumo", true)) {
+                return "Resumo do PDF: " + textoPdf.take(300)
+            }
 
-                pergunta.contains("explicar", true) ->
-                    "Explicação baseada no PDF: " + textoPdf.take(200)
-
-                else ->
-                    "Baseado no PDF: " + textoPdf.take(150)
+            if (pergunta.contains("explicar", true)) {
+                return "Explicação baseada no PDF: " + textoPdf.take(200)
             }
         }
 
-        return "Nenhum PDF carregado"
+        return "Pergunta não reconhecida"
     }
 }
