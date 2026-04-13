@@ -15,7 +15,9 @@ android {
         versionName "1.0"
 
         // 🔐 API KEY SEGURA
-        buildConfigField "String", "API_KEY", "\"${OPENAI_API_KEY}\""
+        def apiKey = project.findProperty("OPENAI_API_KEY") ?: ""
+
+buildConfigField "String", "API_KEY", "\"${apiKey}\""
     }
 
     buildTypes {
