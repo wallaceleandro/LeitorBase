@@ -16,8 +16,8 @@ object ApiIA {
             mapOf("role" to "user", "content" to pergunta)
         ))
 
-        val body = RequestBody.create(
-    MediaType.parse("application/json"),
+       val body = RequestBody.create(
+    "application/json; charset=utf-8".toMediaType(),
     json.toString()
 )
  
