@@ -4,41 +4,37 @@ plugins {
 }
 
 android {
-    ...
-
-    defaultConfig {
-        ...
-
-        buildConfigField "String", "API_KEY", "\"${OPENAI_API_KEY}\""
-    }
-}
     namespace 'com.leitorbase'
-    compileSdk 34
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.leitorbase"
         minSdk 21
-        targetSdk 34
+        targetSdk 33
         versionCode 1
         versionName "1.0"
+
+        // 🔐 API KEY SEGURA
+        buildConfigField "String", "API_KEY", "\"${OPENAI_API_KEY}\""
     }
-compileOptions {
-    sourceCompatibility JavaVersion.VERSION_17
-    targetCompatibility JavaVersion.VERSION_17
-}
-kotlinOptions {
-    jvmTarget = "17"
-}
-    buildFeatures {
-        viewBinding true
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
     }
 }
 
 dependencies {
-implementation 'androidx.appcompat:appcompat:1.6.1'
-implementation 'androidx.core:core-ktx:1.12.0'
-implementation 'com.google.android.material:material:1.11.0'
-implementation 'com.itextpdf:itextg:5.5.10'
-implementation 'com.squareup.okhttp3:okhttp:4.10.0'
-
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation 'com.itextpdf:itextg:5.5.10'
 }
