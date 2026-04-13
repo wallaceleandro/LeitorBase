@@ -3,6 +3,7 @@ package com.leitorbase
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
+import okhttp3.MediaType.Companion.toMediaType
 
 object ApiIA {
 
