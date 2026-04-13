@@ -17,11 +17,11 @@ object ApiIA {
         ))
 
         val body = RequestBody.create(
-            "application/json".toMediaTypeOrNull(),
-            json.toString()
-        )
-
-        val request = Request.Builder()
+    MediaType.parse("application/json"),
+    json.toString()
+)
+ 
+       val request = Request.Builder()
             .url("https://api.openai.com/v1/chat/completions")
             .addHeader("Authorization", "Bearer SUA_API_KEY_AQUI")
             .post(body)
