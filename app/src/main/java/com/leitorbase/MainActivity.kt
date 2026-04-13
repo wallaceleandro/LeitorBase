@@ -39,11 +39,23 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 return@setOnClickListener
             }
 
-            val resposta = IA.processar(this, text)
+            ApiIA.perguntar(text) { respostaApi ->
 
-            outputText.text = resposta
-            falar(resposta)
+    runOnUiThread {
+
+        if (respostaApi.contains("Erro")) {
+
+            val respostaLocal = IA.processar(this, text)
+            outputText.text = respostaLocal
+            falar(respostaLocal)
+
+        } else {
+
+            outputText.text = respostaApi
+            falar(respostaApi)
         }
+    }
+}
 
         // 📄 ABRIR PDF
         buttonAbrirPdf.setOnClickListener {
