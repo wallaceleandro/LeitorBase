@@ -1,11 +1,10 @@
 package com.leitorbase
 
-import android.content.Intent
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import java.util.Locale
+import java.util.*
 
 class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
@@ -17,75 +16,35 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         val inputText = findViewById<EditText>(R.id.inputText)
         val outputText = findViewById<TextView>(R.id.outputText)
-
-        val buttonLer = findViewById<Button>(R.id.buttonLer)
         val buttonPerguntar = findViewById<Button>(R.id.buttonPerguntar)
-        val buttonAbrirPdf = findViewById<Button>(R.id.buttonAbrirPdf)
 
         tts = TextToSpeech(this, this)
 
-        // 🔊 LEITOR
-        buttonLer.setOnClickListener {
-            val texto = inputText.text.toString()
-            falar(texto)
-        }
-
-        // 🧠 IA
         buttonPerguntar.setOnClickListener {
             val text = inputText.text.toString()
 
-            if (text.isEmpty()) {
-                outputText.text = "Digite algo"
-                return@setOnClickListener
-            }
-
             ApiIA.perguntar(text) { respostaApi ->
 
-    runOnUiThread {
+                runOnUiThread {
 
-        if (respostaApi.contains("Erro")) {
+                    if (respostaApi.contains("Erro")) {
 
-            val respostaLocal = IA.processar(this, text)
-            outputText.text = respostaLocal
-            falar(respostaLocal)
+                        val respostaLocal = IA.processar(this, text)
+                        outputText.text = respostaLocal
+                        falar(respostaLocal)
 
-        } else {
+                    } else {
 
-            outputText.text = respostaApi
-            falar(respostaApi)
-        }
-    }
-}
-
-        // 📄 ABRIR PDF
-        buttonAbrirPdf.setOnClickListener {
-
-            val intent = Intent(Intent.ACTION_GET_CONTENT)
-            intent.type = "application/pdf"
-            intent.addCategory(Intent.CATEGORY_OPENABLE)
-
-            startActivityForResult(
-                Intent.createChooser(intent, "Selecionar PDF"),
-                100
-            )
+                        outputText.text = respostaApi
+                        falar(respostaApi)
+                    }
+                }
+            }
         }
     }
 
-    // 📄 RECEBER PDF (AGORA NO LUGAR CERTO)
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == 100 && resultCode == RESULT_OK) {
-
-            val uri = data?.data
-            val resultado = PdfManager.pdfSelecionado(this, uri)
-
-            val outputText = findViewById<TextView>(R.id.outputText)
-
-outputText.text = resultado
-falar(resultado)
-
-        }
+    private fun falar(texto: String) {
+        tts.speak(texto, TextToSpeech.QUEUE_FLUSH, null, null)
     }
 
     override fun onInit(status: Int) {
@@ -94,13 +53,8 @@ falar(resultado)
         }
     }
 
-    private fun falar(texto: String) {
-        tts.speak(texto, TextToSpeech.QUEUE_FLUSH, null, null)
-    }
-
     override fun onDestroy() {
         super.onDestroy()
-        tts.stop()
         tts.shutdown()
     }
 }
