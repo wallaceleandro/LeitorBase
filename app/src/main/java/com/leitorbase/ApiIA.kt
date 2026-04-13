@@ -4,6 +4,7 @@ import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
 import okhttp3.MediaType.Companion.toMediaType
+import com.leitorbase.BuildConfig
 
 object ApiIA {
 
@@ -24,7 +25,7 @@ object ApiIA {
  
        val request = Request.Builder()
             .url("https://api.openai.com/v1/chat/completions")
-            .addHeader("Authorization", "Bearer SUA_API_KEY_AQUI")
+            .addHeader("Authorization", "Bearer " + BuildConfig.API_KEY)
             .post(body)
             .build()
 

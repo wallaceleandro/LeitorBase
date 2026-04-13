@@ -1,0 +1,19 @@
+# Arquivos locais (NUNCA subir)
+local.properties
+
+# Build
+/build
+/app/build
+
+# Gradle
+.gradle
+
+# Android Studio / IDE
+.idea
+*.iml
+
+# Logs
+*.log
+
+# APKs
+*.apk

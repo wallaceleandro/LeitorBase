@@ -4,6 +4,14 @@ plugins {
 }
 
 android {
+    ...
+
+    defaultConfig {
+        ...
+
+        buildConfigField "String", "API_KEY", "\"${OPENAI_API_KEY}\""
+    }
+}
     namespace 'com.leitorbase'
     compileSdk 34
 
