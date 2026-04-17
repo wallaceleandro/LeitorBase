@@ -23,23 +23,10 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         buttonPerguntar.setOnClickListener {
             val text = inputText.text.toString()
 
-            ApiIA.perguntar(text) { respostaApi ->
+            val resposta = IA.processar(this, text)
 
-                runOnUiThread {
-
-                    if (respostaApi.contains("Erro")) {
-
-                        val respostaLocal = IA.processar(this, text)
-                        outputText.text = respostaLocal
-                        falar(respostaLocal)
-
-                    } else {
-
-                        outputText.text = respostaApi
-                        falar(respostaApi)
-                    }
-                }
-            }
+            outputText.text = resposta
+            falar(resposta)
         }
     }
 
