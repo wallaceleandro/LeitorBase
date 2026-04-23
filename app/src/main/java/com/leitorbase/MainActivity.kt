@@ -47,8 +47,13 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun falar(texto: String) {
-        tts.speak(texto, TextToSpeech.QUEUE_FLUSH, null, null)
+
+    val partes = texto.chunked(3000) // divide em blocos
+
+    for (parte in partes) {
+        tts.speak(parte, TextToSpeech.QUEUE_ADD, null, null)
     }
+}
 
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
