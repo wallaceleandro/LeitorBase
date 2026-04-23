@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         tts = TextToSpeech(this, this)
 
-        // IA local
+        // IA
         buttonPerguntar.setOnClickListener {
             val text = inputText.text.toString()
             val resposta = IA.processar(this, text)
@@ -62,18 +62,19 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-    super.onActivityResult(requestCode, resultCode, data)
+        super.onActivityResult(requestCode, resultCode, data)
 
-    if (requestCode == 100 && resultCode == Activity.RESULT_OK) {
-        val uri = data?.data
+        if (requestCode == 100 && resultCode == Activity.RESULT_OK) {
+            val uri = data?.data
 
-        if (uri != null) {
-            val texto = PdfManager.lerPdf(uri, this)
+            if (uri != null) {
+                val texto = PdfManager.lerPdf(uri, this)
 
-            val outputText = findViewById<TextView>(R.id.outputText)
-            outputText.text = texto
+                val outputText = findViewById<TextView>(R.id.outputText)
+                outputText.text = texto
 
-            falar(texto)
+                falar(texto)
+            }
         }
     }
 }
