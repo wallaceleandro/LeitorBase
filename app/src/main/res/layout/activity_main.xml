@@ -12,10 +12,10 @@
         android:hint="Digite algo" />
 
     <Button
-        android:id="@+id/buttonLer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Ler Texto" />
+    android:id="@+id/buttonLer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Ler Texto"/>
 
     <Button
         android:id="@+id/buttonPerguntar"

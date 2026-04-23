@@ -1,5 +1,7 @@
 package com.leitorbase
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.widget.*
@@ -16,26 +18,31 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         val inputText = findViewById<EditText>(R.id.inputText)
         val outputText = findViewById<TextView>(R.id.outputText)
+
         val buttonPerguntar = findViewById<Button>(R.id.buttonPerguntar)
         val buttonLer = findViewById<Button>(R.id.buttonLer)
-
-buttonLer.setOnClickListener {
-    val text = inputText.text.toString()
-    falar(text)
-val buttonPdf = findViewById<Button>(R.id.buttonAbrirPdf)
-
-buttonPdf.setOnClickListener {
-    PdfManager.abrirPdf(this)
+        val buttonPdf = findViewById<Button>(R.id.buttonAbrirPdf)
 
         tts = TextToSpeech(this, this)
 
+        // IA local
         buttonPerguntar.setOnClickListener {
             val text = inputText.text.toString()
-
             val resposta = IA.processar(this, text)
 
             outputText.text = resposta
             falar(resposta)
+        }
+
+        // Ler texto
+        buttonLer.setOnClickListener {
+            val text = inputText.text.toString()
+            falar(text)
+        }
+
+        // Abrir PDF
+        buttonPdf.setOnClickListener {
+            PdfManager.abrirPdf(this)
         }
     }
 
@@ -53,13 +60,12 @@ buttonPdf.setOnClickListener {
         super.onDestroy()
         tts.shutdown()
     }
-}
 
-override fun onActivityResult(requestCode: Int, resultCode: Int, data: android.content.Intent?) {
-    super.onActivityResult(requestCode, resultCode, data)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
-    if (requestCode == 100 && resultCode == RESULT_OK) {
-        val uri = data?.data
-        Toast.makeText(this, "PDF selecionado", Toast.LENGTH_SHORT).show()
+        if (requestCode == 100 && resultCode == Activity.RESULT_OK) {
+            Toast.makeText(this, "PDF selecionado", Toast.LENGTH_SHORT).show()
+        }
     }
 }
