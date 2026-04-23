@@ -17,6 +17,15 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         val inputText = findViewById<EditText>(R.id.inputText)
         val outputText = findViewById<TextView>(R.id.outputText)
         val buttonPerguntar = findViewById<Button>(R.id.buttonPerguntar)
+        val buttonLer = findViewById<Button>(R.id.buttonLer)
+
+buttonLer.setOnClickListener {
+    val text = inputText.text.toString()
+    falar(text)
+val buttonPdf = findViewById<Button>(R.id.buttonAbrirPdf)
+
+buttonPdf.setOnClickListener {
+    PdfManager.abrirPdf(this)
 
         tts = TextToSpeech(this, this)
 
@@ -43,5 +52,14 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     override fun onDestroy() {
         super.onDestroy()
         tts.shutdown()
+    }
+}
+
+override fun onActivityResult(requestCode: Int, resultCode: Int, data: android.content.Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
+
+    if (requestCode == 100 && resultCode == RESULT_OK) {
+        val uri = data?.data
+        Toast.makeText(this, "PDF selecionado", Toast.LENGTH_SHORT).show()
     }
 }

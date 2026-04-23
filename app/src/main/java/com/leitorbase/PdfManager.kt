@@ -5,6 +5,17 @@ import android.net.Uri
 import android.util.Log
 import com.itextpdf.text.pdf.PdfReader
 import com.itextpdf.text.pdf.parser.PdfTextExtractor
+import android.app.Activity
+import android.content.Intent
+
+object PdfManager {
+
+    fun abrirPdf(activity: Activity) {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "application/pdf"
+        activity.startActivityForResult(intent, 100)
+    }
+}
 
 object PdfManager {
 
