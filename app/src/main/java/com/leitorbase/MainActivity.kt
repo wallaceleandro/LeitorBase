@@ -62,10 +62,18 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+    super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == 100 && resultCode == Activity.RESULT_OK) {
-            Toast.makeText(this, "PDF selecionado", Toast.LENGTH_SHORT).show()
+    if (requestCode == 100 && resultCode == Activity.RESULT_OK) {
+        val uri = data?.data
+
+        if (uri != null) {
+            val texto = PdfManager.lerPdf(uri, this)
+
+            val outputText = findViewById<TextView>(R.id.outputText)
+            outputText.text = texto
+
+            falar(texto)
         }
     }
 }
