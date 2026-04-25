@@ -4,82 +4,142 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import java.util.*
+import java.util.Locale
 
 class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private lateinit var tts: TextToSpeech
 
+    private lateinit var inputText: EditText
+    private lateinit var outputText: TextView
+
+    private lateinit var buttonPerguntar: Button
+    private lateinit var buttonLer: Button
+    private lateinit var buttonAbrirPdf: Button
+    private lateinit var buttonPausar: Button
+    private lateinit var buttonContinuar: Button
+    private lateinit var buttonParar: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val inputText = findViewById<EditText>(R.id.inputText)
-        val outputText = findViewById<TextView>(R.id.outputText)
-
-        val buttonPerguntar = findViewById<Button>(R.id.buttonPerguntar)
-        val buttonLer = findViewById<Button>(R.id.buttonLer)
-        val buttonPdf = findViewById<Button>(R.id.buttonAbrirPdf)
+        iniciarComponentes()
 
         tts = TextToSpeech(this, this)
+        VoiceController.init(tts)
 
-        // IA
+        configurarBotoes()
+    }
+
+    private fun iniciarComponentes() {
+        inputText = findViewById(R.id.inputText)
+        outputText = findViewById(R.id.outputText)
+
+        buttonPerguntar = findViewById(R.id.buttonPerguntar)
+        buttonLer = findViewById(R.id.buttonLer)
+        buttonAbrirPdf = findViewById(R.id.buttonAbrirPdf)
+
+        buttonPausar = findViewById(R.id.buttonPausar)
+        buttonContinuar = findViewById(R.id.buttonContinuar)
+        buttonParar = findViewById(R.id.buttonParar)
+    }
+
+    private fun configurarBotoes() {
+
         buttonPerguntar.setOnClickListener {
-            val text = inputText.text.toString()
-            val resposta = IA.processar(this, text)
-
-            outputText.text = resposta
-            falar(resposta)
+            perguntarIA()
         }
 
-        // Ler texto
         buttonLer.setOnClickListener {
-            val text = inputText.text.toString()
-            falar(text)
+            lerTextoDigitado()
         }
 
-        // Abrir PDF
-        buttonPdf.setOnClickListener {
-            PdfManager.abrirPdf(this)
+        buttonAbrirPdf.setOnClickListener {
+            abrirPdf()
+        }
+
+        buttonPausar.setOnClickListener {
+            VoiceController.pausar()
+        }
+
+        buttonContinuar.setOnClickListener {
+            VoiceController.continuar()
+        }
+
+        buttonParar.setOnClickListener {
+            VoiceController.parar()
         }
     }
 
-    private fun falar(texto: String) {
+    private fun perguntarIA() {
+        val pergunta = inputText.text.toString().trim()
 
-    val partes = texto.chunked(3000) // divide em blocos
+        if (pergunta.isEmpty()) {
+            outputText.text = "Digite algo."
+            return
+        }
 
-    for (parte in partes) {
-        tts.speak(parte, TextToSpeech.QUEUE_ADD, null, null)
+        val resposta = IA.processar(this, pergunta)
+
+        outputText.text = resposta
+        VoiceController.falar(resposta)
     }
-}
+
+    private fun lerTextoDigitado() {
+        val texto = inputText.text.toString().trim()
+
+        if (texto.isEmpty()) {
+            outputText.text = "Digite um texto."
+            return
+        }
+
+        VoiceController.falar(texto)
+    }
+
+    private fun abrirPdf() {
+        PdfManager.abrirPdf(this)
+    }
 
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
             tts.language = Locale("pt", "BR")
+            tts.setSpeechRate(1.0f)
+            tts.setPitch(1.0f)
+        }
+    }
+
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?
+    ) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 100 && resultCode == Activity.RESULT_OK) {
+
+            val uri = data?.data ?: return
+
+            val textoPdf = PdfManager.lerPdf(uri, this)
+
+            outputText.text = textoPdf
+
+            VoiceController.falar(textoPdf)
         }
     }
 
     override fun onDestroy() {
-        super.onDestroy()
-        tts.shutdown()
-    }
+        VoiceController.parar()
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == 100 && resultCode == Activity.RESULT_OK) {
-            val uri = data?.data
-
-            if (uri != null) {
-                val texto = PdfManager.lerPdf(uri, this)
-
-                val outputText = findViewById<TextView>(R.id.outputText)
-                outputText.text = texto
-
-                falar(texto)
-            }
+        if (::tts.isInitialized) {
+            tts.stop()
+            tts.shutdown()
         }
+
+        super.onDestroy()
     }
 }
