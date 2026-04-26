@@ -28,6 +28,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Abrir PDF" />
+    
+    <Button
+    android:id="@+id/buttonPausar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Pausar" />
+
+<Button
+    android:id="@+id/buttonContinuar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Continuar" />
+
+<Button
+    android:id="@+id/buttonParar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Parar" />
 
     <ScrollView
         android:layout_width="match_parent"
