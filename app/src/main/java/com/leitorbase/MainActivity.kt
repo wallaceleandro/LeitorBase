@@ -20,8 +20,6 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private lateinit var buttonPerguntar: Button
     private lateinit var buttonLer: Button
     private lateinit var buttonAbrirPdf: Button
-    private lateinit var buttonPausar: Button
-    private lateinit var buttonContinuar: Button
     private lateinit var buttonParar: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,8 +42,6 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         buttonLer = findViewById(R.id.buttonLer)
         buttonAbrirPdf = findViewById(R.id.buttonAbrirPdf)
 
-        buttonPausar = findViewById(R.id.buttonPausar)
-        buttonContinuar = findViewById(R.id.buttonContinuar)
         buttonParar = findViewById(R.id.buttonParar)
     }
 
@@ -61,14 +57,6 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         buttonAbrirPdf.setOnClickListener {
             abrirPdf()
-        }
-
-        buttonPausar.setOnClickListener {
-            VoiceController.pausar()
-        }
-
-        buttonContinuar.setOnClickListener {
-            VoiceController.continuar()
         }
 
         buttonParar.setOnClickListener {
