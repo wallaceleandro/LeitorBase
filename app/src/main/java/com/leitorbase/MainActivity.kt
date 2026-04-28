@@ -48,14 +48,16 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         buttonLer.setOnClickListener {
 
-            val textoTela = outputText.text.toString().trim()
+    val textoDigitado = inputText.text.toString().trim()
+    val textoTela = outputText.text.toString().trim()
 
-            if (textoTela.isNotEmpty()) {
-                VoiceController.falar(textoTela)
-            } else {
-                lerTextoDigitado()
-            }
-        }
+    if (textoDigitado.isNotEmpty()) {
+        VoiceController.falar(textoDigitado)
+    } else if (textoTela.isNotEmpty()) {
+        VoiceController.falar(textoTela)
+    }
+
+}
 
         buttonAbrirPdf.setOnClickListener {
             abrirPdf()
