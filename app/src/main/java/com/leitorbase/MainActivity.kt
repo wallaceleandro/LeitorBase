@@ -26,7 +26,13 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        iniciarComponentes()
+        inputText = findViewById(R.id.inputText)
+        outputText = findViewById(R.id.outputText)
+
+        buttonPerguntar = findViewById(R.id.buttonPerguntar)
+        buttonLer = findViewById(R.id.buttonLer)
+        buttonAbrirPdf = findViewById(R.id.buttonAbrirPdf)
+        buttonParar = findViewById(R.id.buttonParar)
 
         tts = TextToSpeech(this, this)
         VoiceController.init(tts)
@@ -34,42 +40,31 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         configurarBotoes()
     }
 
-    private fun iniciarComponentes() {
-        inputText = findViewById(R.id.inputText)
-        outputText = findViewById(R.id.outputText)
-
-        buttonPerguntar = findViewById(R.id.buttonPerguntar)
-        buttonLer = findViewById(R.id.buttonLer)
-        buttonAbrirPdf = findViewById(R.id.buttonAbrirPdf)
-
-        buttonParar = findViewById(R.id.buttonParar)
-    }
-
     private fun configurarBotoes() {
 
-    buttonPerguntar.setOnClickListener {
-        perguntarIA()
-    }
+        buttonPerguntar.setOnClickListener {
+            perguntarIA()
+        }
 
-    buttonLer.setOnClickListener {
+        buttonLer.setOnClickListener {
 
-        val texto = outputText.text.toString().trim()
+            val textoTela = outputText.text.toString().trim()
 
-        if (texto.isNotEmpty()) {
-            VoiceController.falar(texto)
-        } else {
-            lerTextoDigitado()
+            if (textoTela.isNotEmpty()) {
+                VoiceController.falar(textoTela)
+            } else {
+                lerTextoDigitado()
+            }
+        }
+
+        buttonAbrirPdf.setOnClickListener {
+            abrirPdf()
+        }
+
+        buttonParar.setOnClickListener {
+            VoiceController.parar()
         }
     }
-
-    buttonAbrirPdf.setOnClickListener {
-        abrirPdf()
-    }
-
-    buttonParar.setOnClickListener {
-        VoiceController.parar()
-    }
-}
 
     private fun perguntarIA() {
         val pergunta = inputText.text.toString().trim()
@@ -113,30 +108,21 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         resultCode: Int,
         data: Intent?
     ) {
-        override fun onActivityResult(
-    requestCode: Int,
-    resultCode: Int,
-    data: Intent?
-) {
-    super.onActivityResult(requestCode, resultCode, data)
+        super.onActivityResult(requestCode, resultCode, data)
 
-    if (requestCode == 100 && resultCode == Activity.RESULT_OK) {
+        if (requestCode == 100 && resultCode == Activity.RESULT_OK) {
 
-        val uri = data?.data ?: return
+            val uri = data?.data ?: return
 
-        val textoPdf = PdfManager.lerPdf(uri, this)
+            val textoPdf = PdfManager.lerPdf(uri, this)
 
-        outputText.text = textoPdf
-    }
-}
-        override fun onDestroy() {
-        VoiceController.parar()
-
-        if (::tts.isInitialized) {
-            tts.stop()
-            tts.shutdown()
+            outputText.text = textoPdf
         }
+    }
 
+    override fun onDestroy() {
+        VoiceController.parar()
+        tts.shutdown()
         super.onDestroy()
     }
 }
