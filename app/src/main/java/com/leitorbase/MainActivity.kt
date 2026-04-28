@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private lateinit var buttonLer: Button
     private lateinit var buttonAbrirPdf: Button
     private lateinit var buttonParar: Button
+    private var ultimoTexto = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,14 +50,15 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         buttonLer.setOnClickListener {
 
     val textoDigitado = inputText.text.toString().trim()
-    val textoTela = outputText.text.toString().trim()
 
-    if (textoDigitado.isNotEmpty()) {
-        VoiceController.falar(textoDigitado)
-    } else if (textoTela.isNotEmpty()) {
-        VoiceController.falar(textoTela)
+    when {
+        textoDigitado.isNotEmpty() -> VoiceController.falar(textoDigitado)
+
+        ultimoTexto.isNotEmpty() -> VoiceController.falar(ultimoTexto)
+
+        outputText.text.toString().trim().isNotEmpty() ->
+            VoiceController.falar(outputText.text.toString())
     }
-
 }
 
         buttonAbrirPdf.setOnClickListener {
@@ -118,7 +120,9 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             val textoPdf = PdfManager.lerPdf(uri, this)
 
-            outputText.text = textoPdf
+            ultimoTexto = textoPdf
+outputText.text = textoPdf
+
         }
     }
 
