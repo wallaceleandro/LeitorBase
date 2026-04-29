@@ -1,6 +1,7 @@
 package com.leitorbase
 
 import android.speech.tts.TextToSpeech
+import android.speech.tts.UtteranceProgressListener
 
 object VoiceController {
 
@@ -11,7 +12,23 @@ object VoiceController {
     private var pausado = false
 
     fun init(ttsInstance: TextToSpeech) {
+
         tts = ttsInstance
+
+        tts?.setOnUtteranceProgressListener(
+            object : UtteranceProgressListener() {
+
+                override fun onStart(utteranceId: String?) {}
+
+                override fun onDone(utteranceId: String?) {
+                    if (!pausado) {
+                        falarProximaParte()
+                    }
+                }
+
+                override fun onError(utteranceId: String?) {}
+            }
+        )
     }
 
     fun falar(texto: String) {
@@ -19,8 +36,8 @@ object VoiceController {
         partes.clear()
 
         val palavras = texto.split(" ")
+        val tamanhoBloco = 18
 
-        val tamanhoBloco = 20
         var i = 0
 
         while (i < palavras.size) {
@@ -51,7 +68,7 @@ object VoiceController {
             trecho,
             TextToSpeech.QUEUE_FLUSH,
             null,
-            "LEITURA"
+            "LEITURA_$indiceAtual"
         )
 
         indiceAtual++
