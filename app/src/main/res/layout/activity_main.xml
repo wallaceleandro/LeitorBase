@@ -34,6 +34,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:text="Parar" />
+    <Button
+    android:id="@+id/buttonPause"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Pausar" />
 
     <ScrollView
         android:layout_width="match_parent"
