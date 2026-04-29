@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private lateinit var buttonAbrirPdf: Button
     private lateinit var buttonParar: Button
     private var ultimoTexto = ""
+    private var pausado = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +59,10 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         outputText.text.toString().trim().isNotEmpty() ->
             VoiceController.falar(outputText.text.toString())
+
+        pausado = false
+buttonPause.text = "Pausar"
+
     }
 }
 
@@ -68,7 +73,20 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         buttonParar.setOnClickListener {
             VoiceController.parar()
         }
+        
+        buttonPause.setOnClickListener {
+
+    if (!pausado) {
+        VoiceController.parar()
+        pausado = true
+        buttonPause.text = "Continuar"
+    } else {
+        VoiceController.falar(ultimoTexto)
+        pausado = false
+        buttonPause.text = "Pausar"
     }
+
+}
 
     private fun perguntarIA() {
         val pergunta = inputText.text.toString().trim()
