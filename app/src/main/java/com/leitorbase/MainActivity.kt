@@ -74,18 +74,16 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         buttonPause.setOnClickListener {
 
-            if (!pausado) {
-                VoiceController.parar()
-                pausado = true
-                buttonPause.text = "Continuar"
-            } else {
-                if (ultimoTexto.isNotEmpty()) {
-                    VoiceController.falar(ultimoTexto)
-                }
-                pausado = false
-                buttonPause.text = "Pausar"
-            }
-        }
+    if (!pausado) {
+        VoiceController.pausar()
+        pausado = true
+        buttonPause.text = "Continuar"
+    } else {
+        VoiceController.continuar()
+        pausado = false
+        buttonPause.text = "Pausar"
+    }
+}
 
         buttonParar.setOnClickListener {
             VoiceController.parar()
