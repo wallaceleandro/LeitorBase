@@ -19,8 +19,10 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private lateinit var buttonPerguntar: Button
     private lateinit var buttonLer: Button
-    private lateinit var buttonAbrirPdf: Button
+    private lateinit var buttonPause: Button
     private lateinit var buttonParar: Button
+    private lateinit var buttonAbrirPdf: Button
+
     private var ultimoTexto = ""
     private var pausado = false
 
@@ -33,8 +35,9 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         buttonPerguntar = findViewById(R.id.buttonPerguntar)
         buttonLer = findViewById(R.id.buttonLer)
-        buttonAbrirPdf = findViewById(R.id.buttonAbrirPdf)
+        buttonPause = findViewById(R.id.buttonPause)
         buttonParar = findViewById(R.id.buttonParar)
+        buttonAbrirPdf = findViewById(R.id.buttonAbrirPdf)
 
         tts = TextToSpeech(this, this)
         VoiceController.init(tts)
@@ -50,67 +53,65 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         buttonLer.setOnClickListener {
 
-    val textoDigitado = inputText.text.toString().trim()
+            val textoDigitado = inputText.text.toString().trim()
+            val textoTela = outputText.text.toString().trim()
 
-    when {
-        textoDigitado.isNotEmpty() -> VoiceController.falar(textoDigitado)
+            when {
+                textoDigitado.isNotEmpty() -> {
+                    ultimoTexto = textoDigitado
+                    VoiceController.falar(textoDigitado)
+                }
 
-        ultimoTexto.isNotEmpty() -> VoiceController.falar(ultimoTexto)
+                textoTela.isNotEmpty() -> {
+                    ultimoTexto = textoTela
+                    VoiceController.falar(textoTela)
+                }
+            }
 
-        outputText.text.toString().trim().isNotEmpty() ->
-            VoiceController.falar(outputText.text.toString())
+            pausado = false
+            buttonPause.text = "Pausar"
+        }
 
-        pausado = false
-buttonPause.text = "Pausar"
+        buttonPause.setOnClickListener {
 
-    }
-}
-
-        buttonAbrirPdf.setOnClickListener {
-            abrirPdf()
+            if (!pausado) {
+                VoiceController.parar()
+                pausado = true
+                buttonPause.text = "Continuar"
+            } else {
+                if (ultimoTexto.isNotEmpty()) {
+                    VoiceController.falar(ultimoTexto)
+                }
+                pausado = false
+                buttonPause.text = "Pausar"
+            }
         }
 
         buttonParar.setOnClickListener {
             VoiceController.parar()
+            pausado = false
+            buttonPause.text = "Pausar"
         }
-        
-        buttonPause.setOnClickListener {
 
-    if (!pausado) {
-        VoiceController.parar()
-        pausado = true
-        buttonPause.text = "Continuar"
-    } else {
-        VoiceController.falar(ultimoTexto)
-        pausado = false
-        buttonPause.text = "Pausar"
+        buttonAbrirPdf.setOnClickListener {
+            abrirPdf()
+        }
     }
 
-}
-
     private fun perguntarIA() {
+
         val pergunta = inputText.text.toString().trim()
 
         if (pergunta.isEmpty()) {
-            outputText.text = "Digite algo."
+            outputText.text = "Digite uma pergunta."
             return
         }
 
         val resposta = IA.processar(this, pergunta)
 
         outputText.text = resposta
+        ultimoTexto = resposta
         VoiceController.falar(resposta)
-    }
-
-    private fun lerTextoDigitado() {
-        val texto = inputText.text.toString().trim()
-
-        if (texto.isEmpty()) {
-            outputText.text = "Digite um texto."
-            return
-        }
-
-        VoiceController.falar(texto)
     }
 
     private fun abrirPdf() {
@@ -138,9 +139,8 @@ buttonPause.text = "Pausar"
 
             val textoPdf = PdfManager.lerPdf(uri, this)
 
+            outputText.text = textoPdf
             ultimoTexto = textoPdf
-outputText.text = textoPdf
-
         }
     }
 
