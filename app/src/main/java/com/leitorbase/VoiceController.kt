@@ -12,43 +12,48 @@ object VoiceController {
     private var pausado = false
 
     fun init(ttsInstance: TextToSpeech) {
-
         tts = ttsInstance
 
-        tts?.setOnUtteranceProgressListener(
-            object : UtteranceProgressListener() {
+        tts?.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
 
-                override fun onStart(utteranceId: String?) {}
+            override fun onStart(utteranceId: String?) {}
 
-                override fun onDone(utteranceId: String?) {
-                    if (!pausado) {
-                        falarProximaParte()
-                    }
+            override fun onDone(utteranceId: String?) {
+                if (!pausado) {
+                    indiceAtual++
+                    falarProximaParte()
                 }
-
-                override fun onError(utteranceId: String?) {}
             }
-        )
+
+            override fun onError(utteranceId: String?) {}
+        })
     }
 
     fun falar(texto: String) {
 
         partes.clear()
 
-        val palavras = texto.split(" ")
-        val tamanhoBloco = 18
+        // 🔥 Divisão inteligente (frases + limite de tamanho)
+        val frases = texto.split(Regex("(?<=[.!?])"))
 
-        var i = 0
+        for (frase in frases) {
 
-        while (i < palavras.size) {
+            val limpa = frase.trim()
+            if (limpa.isEmpty()) continue
 
-            val fim = minOf(i + tamanhoBloco, palavras.size)
+            // quebra frases muito grandes
+            if (limpa.length > 120) {
+                val palavras = limpa.split(" ")
+                var i = 0
 
-            partes.add(
-                palavras.subList(i, fim).joinToString(" ")
-            )
-
-            i += tamanhoBloco
+                while (i < palavras.size) {
+                    val fim = minOf(i + 15, palavras.size)
+                    partes.add(palavras.subList(i, fim).joinToString(" "))
+                    i += 15
+                }
+            } else {
+                partes.add(limpa)
+            }
         }
 
         indiceAtual = 0
@@ -68,10 +73,8 @@ object VoiceController {
             trecho,
             TextToSpeech.QUEUE_FLUSH,
             null,
-            "LEITURA_$indiceAtual"
+            "TRECHO_$indiceAtual"
         )
-
-        indiceAtual++
     }
 
     fun pausar() {
