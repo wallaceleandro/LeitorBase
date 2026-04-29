@@ -6,7 +6,7 @@ object VoiceController {
 
     private var tts: TextToSpeech? = null
 
-    private var partes = listOf<String>()
+    private var partes = mutableListOf<String>()
     private var indiceAtual = 0
     private var pausado = false
 
@@ -16,9 +16,23 @@ object VoiceController {
 
     fun falar(texto: String) {
 
-        partes = texto.split(".", "!", "?")
-            .map { it.trim() }
-            .filter { it.isNotEmpty() }
+        partes.clear()
+
+        val palavras = texto.split(" ")
+
+        val tamanhoBloco = 20
+        var i = 0
+
+        while (i < palavras.size) {
+
+            val fim = minOf(i + tamanhoBloco, palavras.size)
+
+            partes.add(
+                palavras.subList(i, fim).joinToString(" ")
+            )
+
+            i += tamanhoBloco
+        }
 
         indiceAtual = 0
         pausado = false
@@ -28,7 +42,8 @@ object VoiceController {
 
     private fun falarProximaParte() {
 
-        if (indiceAtual >= partes.size || pausado) return
+        if (pausado) return
+        if (indiceAtual >= partes.size) return
 
         val trecho = partes[indiceAtual]
 
