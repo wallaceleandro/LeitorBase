@@ -78,9 +78,14 @@ object VoiceController {
     }
 
     fun pausar() {
-        pausado = true
-        tts?.stop()
+    pausado = true
+    tts?.stop()
+
+    // 🔥 volta um passo para não perder o trecho atual
+    if (indiceAtual > 0) {
+        indiceAtual--
     }
+}
 
     fun continuar() {
         pausado = false
