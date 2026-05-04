@@ -1,7 +1,6 @@
 package com.leitorbase
 
 import android.speech.tts.TextToSpeech
-import android.speech.tts.UtteranceProgressListener
 
 object VoiceController {
 
@@ -9,91 +8,70 @@ object VoiceController {
 
     private var partes = mutableListOf<String>()
     private var indiceAtual = 0
+
     private var pausado = false
+    private var lendo = false
 
     fun init(ttsInstance: TextToSpeech) {
         tts = ttsInstance
-
-        tts?.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
-
-            override fun onStart(utteranceId: String?) {}
-
-            override fun onDone(utteranceId: String?) {
-                if (!pausado) {
-                    indiceAtual++
-                    falarProximaParte()
-                }
-            }
-
-            override fun onError(utteranceId: String?) {}
-        })
     }
 
     fun falar(texto: String) {
 
         partes.clear()
 
-        // 🔥 Divisão inteligente (frases + limite de tamanho)
         val frases = texto.split(Regex("(?<=[.!?])"))
 
         for (frase in frases) {
-
             val limpa = frase.trim()
-            if (limpa.isEmpty()) continue
-
-            // quebra frases muito grandes
-            if (limpa.length > 120) {
-                val palavras = limpa.split(" ")
-                var i = 0
-
-                while (i < palavras.size) {
-                    val fim = minOf(i + 15, palavras.size)
-                    partes.add(palavras.subList(i, fim).joinToString(" "))
-                    i += 15
-                }
-            } else {
+            if (limpa.isNotEmpty()) {
                 partes.add(limpa)
             }
         }
 
         indiceAtual = 0
         pausado = false
+        lendo = true
 
-        falarProximaParte()
+        falarLoop()
     }
 
-    private fun falarProximaParte() {
+    private fun falarLoop() {
 
-        if (pausado) return
+        if (!lendo || pausado) return
         if (indiceAtual >= partes.size) return
 
         val trecho = partes[indiceAtual]
 
         tts?.speak(
             trecho,
-            TextToSpeech.QUEUE_FLUSH,
+            TextToSpeech.QUEUE_ADD,
             null,
-            "TRECHO_$indiceAtual"
+            "ID_$indiceAtual"
         )
+
+        indiceAtual++
+
+        // 🔥 chama próximo manualmente (sem depender de stop)
+        tts?.playSilentUtterance(50, TextToSpeech.QUEUE_ADD, null)
+
+        falarLoop()
     }
 
     fun pausar() {
-    pausado = true
-    tts?.stop()
-
-    // 🔥 volta um passo para não perder o trecho atual
-    if (indiceAtual > 0) {
-        indiceAtual--
+        pausado = true
     }
-}
 
     fun continuar() {
+        if (!lendo) return
+
         pausado = false
-        falarProximaParte()
+        falarLoop()
     }
 
     fun parar() {
-        pausado = true
+        pausado = false
+        lendo = false
         indiceAtual = 0
         tts?.stop()
     }
